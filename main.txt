@@ -1,0 +1,209 @@
+SELECT STRING_AGG(ref, ',') 
+FROM dbo.step_01a_in_sheet;
+
+
+
+SELECT 
+    ref,
+    QUOTENAME(ref) AS safe_column
+FROM dbo.step_01a_in_sheet;
+
+-- pakistan
+DECLARE @cols NVARCHAR(MAX);
+SELECT @cols =
+    STRING_AGG(QUOTENAME(ref), ',')
+    WITHIN GROUP (ORDER BY ref)
+FROM step_01a_in_sheet;
+
+PRINT @cols;
+
+--pakistan 02
+
+SELECT
+    invoice_number,
+    qxc,
+    CASE
+        WHEN invoice_number = 'IN#5767636'
+        THEN 'MATCHED'
+        ELSE 'NOT MATCHED'
+    END AS status
+FROM dbo.step_02_po_details;
+
+
+--pakstan 03
+
+SELECT
+
+SUM(
+    CASE
+        WHEN invoice_number = 'IN#5767636'
+        THEN qxc
+        ELSE 0
+    END
+) AS total_for_invoice
+
+FROM dbo.step_02_po_details;
+
+
+--pakistan 04
+
+SELECT
+    invoice_number,
+    SUM(qxc) AS total_amount
+FROM dbo.step_02_po_details
+GROUP BY invoice_number;
+
+-- select *  from  step_02_po_details    
+
+-- pakistan 05
+
+SELECT
+    qxc,
+    TRY_CAST(qxc AS decimal(18,0)) AS converted_value
+FROM dbo.step_02_po_details;
+
+-- pakistan 06
+
+SELECT
+    qxc,
+    ISNULL(TRY_CAST(qxc AS decimal(18,2)),0) AS safe_amount
+FROM dbo.step_02_po_details;
+
+-- pakistan 07
+
+SELECT
+    c.ref,
+    p.invoice_number,
+    p.qxc
+FROM dbo.step_01a_cr_sheet c
+LEFT JOIN dbo.step_02_po_details p
+ON p.cr_issue = c.ref;
+
+-- pakistan 08
+
+SELECT
+    c.ref,
+    p.invoice_number,
+    p.qxc
+FROM dbo.step_01a_cr_sheet c
+full outer JOIN dbo.step_02_po_details p
+ON p.cr_issue = c.ref;
+
+-- pakistan 09
+
+SELECT
+STRING_AGG(
+    QUOTENAME(ref),
+    ','
+) AS dynamic_columns
+FROM dbo.step_01a_in_sheet;
+
+-- pakistan 10
+
+DECLARE @cols NVARCHAR(MAX);
+
+SELECT @cols =
+STRING_AGG(
+    QUOTENAME(ref),
+    ','
+)
+FROM dbo.step_01a_in_sheet
+
+print @cols;
+
+
+-- pakistan 11
+DECLARE @cols NVARCHAR(MAX);
+DECLARE @sql NVARCHAR(MAX);
+
+SELECT @cols =   STRING_AGG( QUOTENAME(ref), ',')    FROM dbo.step_01a_in_sheet
+
+SET @sql = '
+               SELECT ' + @cols + '   FROM dbo.step_02_po_details 
+                                                                    ' 
+      ;
+
+print @cols;
+
+print @sql;
+
+
+-- pakistan 12
+
+ SELECT
+SUM(
+CASE
+WHEN invoice_number='IN#5767636'
+THEN qxc
+ELSE 0
+END
+) AS [IN#5767636],
+
+SUM(
+CASE
+WHEN invoice_number='IN#5777129'
+THEN qxc
+ELSE 0
+END
+) AS [IN#5777129]
+
+FROM dbo.step_02_po_details;
+
+-- pakistan 13
+
+SELECT
+    ref,
+    REPLACE(ref,'''','''''') AS fixed_ref
+FROM dbo.step_01a_in_sheet;
+
+
+-- pakistan 14
+
+SELECT
+    '[' + invoice_number + ']' AS original,
+    '[' + LTRIM(RTRIM(invoice_number)) + ']' AS cleaned
+FROM dbo.step_02_po_details;
+
+-- PAKISTAN 15
+
+
+SELECT
+    pay_day,
+    ABS(pay_day) AS positive_value
+FROM dbo.step_01a_cr_sheet;
+
+-- PAKISTAN 16
+
+SELECT
+    CONCAT(invoice_number, cr_issue) AS combined_key
+FROM dbo.step_02_po_details;
+
+
+-- PAKISTAN 17
+
+SELECT
+    ref,
+    CAST(NULL AS varchar(50)) AS [Feb-26]
+FROM dbo.step_01a_cr_sheet;
+
+-- PAKISTAN 18
+
+SELECT STRING_AGG(  'CAST(NULL AS varchar(50)) AS '   + QUOTENAME(ref),  ',' )
+                                                                               FROM dbo.step_01a_in_sheet;
+--  PAKISTAN 19
+
+SELECT STRING_AGG( '  SUM(
+                             CASE
+                                       WHEN invoice_number = '''
+                                                                   + ref +
+                                                                                '''   THEN qxc   ELSE 0   END ) AS ' + QUOTENAME(ref),  ','   )
+FROM dbo.step_01a_in_sheet;
+
+-- PAKISTAN 20
+
+ 
+
+
+
+
+
